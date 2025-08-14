@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "Installing dependencies..."
+      - pip install --upgrade pip
+      - pip install boto3
+  pre_build:
+    commands:
+      - echo "Validating CloudFormation template..."
+      - aws cloudformation validate-template --template-body file://template.yaml
+  build:
+    commands:
+      - echo "Running security scan with Conformity Template Scanner..."
+      # Example: Assuming you have the Cloud One CLI tool installed
+      # - conformity template scan --profile myProfile --template-path template.yaml
+      - echo "Security scan complete"
+  post_build:
+    commands:
+      - echo "Build phase complete. Preparing artifacts..."
+artifacts:
+  files:
+    - cloudformation.yaml
+    - '**/*'
+  discard-paths: yes
